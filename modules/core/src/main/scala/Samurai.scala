@@ -1,6 +1,9 @@
 package ge.zgharbi.ganbari.core
 
-import id.IdType
+import id.{IdManager, IdType}
+
+import cats.effect.Sync
+import cats.syntax.all.*
 
 private trait Tag
 private opaque type Id = IdType[Tag]
@@ -13,3 +16,10 @@ case class Samurai(
     email: Email,
     password: String,
 )
+
+//object Samurai {
+//  def apply[F[_]: Sync](email: String, password: String): F[Samurai] =
+//    IdManager[F]
+//      .make[Id]
+//      .flatMap(id => Email[F](email).map(Samurai(id, _, password)))
+//}
