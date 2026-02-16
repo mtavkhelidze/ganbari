@@ -32,7 +32,7 @@ class IdManagerTest extends AsyncFreeSpec with AsyncIOSpec {
     val invalid = "not-a-uuid"
     service.from[TestId](invalid).attempt.map {
       case Left(_: IllegalArgumentException) => succeed
-      case Left(t) => fail(s"Unexpected exception: $t")
+      case Left(t)  => fail(s"Unexpected exception: $t")
       case Right(_) => fail("Expected failure for invalid UUID")
     }
   }
