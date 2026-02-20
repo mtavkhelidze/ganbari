@@ -6,13 +6,13 @@ import cats.effect.testing.scalatest.AsyncIOSpec
 import org.scalatest.freespec.AsyncFreeSpec
 
 private object UserId {
-  type Type = IdType[Tag]
+  type Type = UuidType[Tag]
   sealed trait Tag
 }
 type TestId = UserId.Type
 
-class IdManagerTest extends AsyncFreeSpec with AsyncIOSpec {
-  val service = IdManager[IO]
+class UuidSyncFactoryTest extends AsyncFreeSpec with AsyncIOSpec {
+  val service = UuidSyncFactory[IO]
 
   "make should produce unique IDs" in {
     for {

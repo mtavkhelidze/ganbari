@@ -1,12 +1,12 @@
 package ge.zgharbi.ganbari.core
 
-import id.{IdManager, IdType}
+import id.{UuidSyncFactory, UuidType}
 
 import cats.effect.Sync
 import cats.syntax.all.*
 
 private trait Tag
-private opaque type Id = IdType[Tag]
+private opaque type Id = UuidType[Tag]
 
 // todo: move into separate type if validation will be needed
 private opaque type Password <: String = String

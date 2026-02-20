@@ -7,14 +7,14 @@ import cats.{Eq, Show}
 
 import java.util.UUID
 
-opaque type IdType[A] = UUID
+opaque type UuidType[A] = UUID
 
 trait IsUUID[A] {
   def fromUUID(uuid: UUID): A
   def toUUID(id: A): UUID
 }
 
-object IdType {
+object UuidType {
   def apply[A](uuid: UUID)(using iso: IsUUID[A]): A =
     iso.fromUUID(uuid)
 
@@ -26,20 +26,20 @@ object IdType {
 
   given [A](using IsUUID[A]): Ordering[A] = Ordering.by(_.value)
 
-  given [A]: IsUUID[IdType[A]] with {
-    def fromUUID(uuid: UUID): IdType[A] = uuid
-    def toUUID(id: IdType[A]): UUID = id
+  given [A]: IsUUID[UuidType[A]] with {
+    def fromUUID(uuid: UUID): UuidType[A] = uuid
+    def toUUID(id: UuidType[A]): UUID = id
   }
 }
 
-trait IdService[F[_]] {
+trait UuidFactory[F[_]] {
   def make[A](using IsUUID[A]): F[A]
 
   def from[A](s: String)(using IsUUID[A]): F[A]
 }
 
-object IdManager {
-  def apply[F[_]: Sync]: IdService[F] = new IdService[F] {
+object UuidSyncFactory {
+  def apply[F[_]: Sync]: UuidFactory[F] = new UuidFactory[F] {
     override def make[A](using iso: IsUUID[A]): F[A] =
       Sync[F].delay(UUID.randomUUID()).map(iso.fromUUID)
 
