@@ -1,5 +1,5 @@
 package ge.zgharbi.ganbari.core
-import id.{UuidFactory, UuidSyncFactory, UuidType}
+import uuid_id.{UuidFactory, UuidSyncFactory, UuidType}
 
 import cats.*
 import cats.effect.Sync

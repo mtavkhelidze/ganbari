@@ -1,5 +1,5 @@
 package ge.zgharbi.ganbari.core
-package id
+package uuid_id
 
 import cats.effect.Sync
 import cats.syntax.all.*

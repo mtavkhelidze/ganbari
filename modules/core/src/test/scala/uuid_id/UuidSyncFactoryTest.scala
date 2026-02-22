@@ -1,5 +1,5 @@
 package ge.zgharbi.ganbari.core
-package id
+package uuid_id
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
