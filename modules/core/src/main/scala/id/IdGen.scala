@@ -12,9 +12,8 @@ trait IdGen[F[_], Raw] {
 
 object IdGen {
   def uuid[F[_]: Sync]: IdGen[F, UUID] = new IdGen[F, UUID] {
-
-    override def make: F[UUID] = Sync[F].pure(UUID.randomUUID())
-
+    override def make: F[UUID] =
+      Sync[F].delay(UUID.randomUUID())
     override def from(s: String): F[UUID] =
       Sync[F].catchNonFatal(UUID.fromString(s))
   }

@@ -1,6 +1,6 @@
 package ge.zgharbi.ganbari.core
 
-import id.{IdGen, IdType, UuidSyncId}
+import id.{IdFactory, IdGen, IdType}
 
 import cats.*
 import cats.effect.*
@@ -10,9 +10,9 @@ private object DomainId {
   type Type = IdType[Tag]
   sealed trait Tag
 }
-type DomainId = DomainId.Type
+opaque type DomainId = DomainId.Type
+val di: IO[DomainId] = IdFactory.uuid[IO].make[DomainId]
 
-val di: IO[DomainId] = new UuidSyncId[IO].make[DomainId]
 case class Domain(
     id: DomainId,
     name: String,

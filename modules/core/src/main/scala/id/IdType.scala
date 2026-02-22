@@ -11,10 +11,13 @@ trait IdIso[Raw, A] {
 }
 
 object IdType {
-  given uuid[A]: IdIso[UUID, IdType[A]] with
+  given uuid[A]: IdIso[UUID, IdType[A]] with {
     def from(a: UUID): IdType[A] = a.asInstanceOf[A]
     def to(a: IdType[A]): UUID = a.asInstanceOf[UUID]
-  given long[A]: IdIso[Long, IdType[A]] with
+  }
+
+  given long[A]: IdIso[Long, IdType[A]] with {
     def from(a: Long): IdType[A] = a.asInstanceOf[A]
     def to(a: IdType[A]): Long = a.asInstanceOf[Long]
+  }
 }
