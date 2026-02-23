@@ -11,6 +11,7 @@ trait IdFactory[F[_], Raw] {
   def make[A](using IdIso[Raw, A]): F[A]
   def from[A](s: String)(using IdIso[Raw, A]): F[A]
 }
+
 object IdFactory {
   def uuid[F[_]: Sync] = new IdFactory[F, UUID] {
     val gen: IdGen[F, UUID] = IdGen.uuid[F]
