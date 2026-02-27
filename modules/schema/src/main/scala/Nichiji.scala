@@ -6,7 +6,7 @@ import cats.syntax.all.*
 
 import java.time.*
 
-// Nichiji (日時) is Date and Time in Japanese
+// @note: Nichiji (日時) is Date and Time in Japanese
 final case class Nichiji(
     ts: LocalDateTime,
     tz: ZoneOffset,

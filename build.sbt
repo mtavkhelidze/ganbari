@@ -1,4 +1,4 @@
-ThisBuild / scalaVersion := "3.8.1"
+ThisBuild / scalaVersion := "3.8.2"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / description :=
@@ -25,9 +25,9 @@ lazy val commonDeps = Seq(
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.7.0" % Test,
 )
 
-lazy val core = (project in file("modules/core"))
+lazy val core = (project in file("modules/schema"))
   .settings(
-    name := "ganbari-core",
-    idePackagePrefix := Some("ge.zgharbi.ganbari.core"),
+    name := "schema",
+    idePackagePrefix := Some("ge.zgharbi.ganbari.schema"),
     libraryDependencies ++= commonDeps,
   )

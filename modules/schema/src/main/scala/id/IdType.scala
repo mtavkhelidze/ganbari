@@ -14,6 +14,7 @@ trait IdIso[Raw, A] {
 
 object IdType {
   given [A]: Eq[IdType[A]] = (a, b) => a == b
+
   given uuid[A]: IdIso[UUID, IdType[A]] with {
     def from(a: UUID): IdType[A] = a.asInstanceOf[A]
     def to(a: IdType[A]): UUID = a.asInstanceOf[UUID]
