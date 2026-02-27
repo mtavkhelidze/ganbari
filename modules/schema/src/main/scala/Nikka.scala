@@ -1,9 +1,9 @@
-package ge.zgharbi.ganbari.core
+package schema
 
 import cats.*
 import cats.effect.Sync
 import cats.syntax.all.*
-import ge.zgharbi.ganbari.core.id.IdType
+import id.IdType
 
 private object NikkaId {
   type Type = IdType[Tag]

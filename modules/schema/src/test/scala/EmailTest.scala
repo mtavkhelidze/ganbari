@@ -1,4 +1,4 @@
-package ge.zgharbi.ganbari.core
+package schema
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec

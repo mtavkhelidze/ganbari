@@ -1,4 +1,4 @@
-package ge.zgharbi.ganbari.core
+package schema
 package id
 
 import cats.effect.*

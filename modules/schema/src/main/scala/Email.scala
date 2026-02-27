@@ -1,4 +1,4 @@
-package ge.zgharbi.ganbari.core
+package schema
 
 import cats.effect.Sync
 import cats.{Eq, Show}
