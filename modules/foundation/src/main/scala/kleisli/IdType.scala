@@ -1,5 +1,4 @@
-package schema
-package id
+package kleisli
 
 import cats.*
 

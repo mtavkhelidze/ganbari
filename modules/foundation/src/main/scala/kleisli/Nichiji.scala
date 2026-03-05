@@ -1,8 +1,9 @@
-package schema
+package kleisli
 
 import cats.*
 import cats.effect.*
 import cats.syntax.all.*
+import kleisli.Nichiji
 
 import java.time.*
 

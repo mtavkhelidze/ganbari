@@ -1,9 +1,10 @@
-package schema
-package id
+package kleisli.id
 
 import cats.*
 import cats.effect.Sync
 import cats.syntax.all.*
+import kleisli.IdIso
+import kleisli.id.IdFactory
 
 import java.util.UUID
 

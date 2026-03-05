@@ -1,12 +1,13 @@
-package schema
-package id
+package kleisli.id
 
 import cats.*
 import cats.effect.*
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.syntax.all.*
+import kleisli.{IdIso, IdType}
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
+import kleisli.id.IdFactory
 
 import java.util.UUID
 

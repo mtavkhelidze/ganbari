@@ -1,4 +1,4 @@
-package schema
+package kleisli
 
 import cats.effect.Sync
 import cats.{Eq, Show}

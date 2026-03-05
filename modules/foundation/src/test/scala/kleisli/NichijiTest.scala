@@ -1,4 +1,4 @@
-package schema
+package kleisli
 
 import cats.Eq
 import cats.effect.*
@@ -7,6 +7,7 @@ import cats.implicits.*
 import cats.syntax.all.*
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
+import kleisli.Nichiji
 
 import java.time.{Instant, LocalDate}
 

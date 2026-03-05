@@ -1,4 +1,4 @@
-package schema
+package kleisli
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
@@ -6,6 +6,7 @@ import cats.implicits.*
 import cats.syntax.apply.*
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
+import kleisli.Email
 
 class EmailTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "should create a valid email successfully" in {

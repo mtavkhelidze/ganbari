@@ -1,9 +1,8 @@
-package schema
-
-import id.{IdFactory, IdType}
+package kleisli
 
 import cats.*
 import cats.effect.*
+import kleisli.id.IdFactory
 
 private object DomainId { sealed trait Tag }
 opaque type DomainId = IdType[DomainId.Tag]

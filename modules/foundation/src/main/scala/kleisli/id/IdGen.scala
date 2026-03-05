@@ -1,7 +1,7 @@
-package schema
-package id
+package kleisli.id
 
 import cats.effect.*
+import kleisli.id.IdGen
 
 import java.util.UUID
 
