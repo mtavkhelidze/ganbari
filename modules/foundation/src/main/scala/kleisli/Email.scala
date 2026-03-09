@@ -1,22 +1,45 @@
 package kleisli
 
-import cats.effect.Sync
-import cats.{Eq, Show}
+import cats.*
+import cats.data.*
+import cats.implicits.*
+import tools.Validations.*
 
 opaque type Email <: String = String
 
 object Email {
-  def apply[F[_]: Sync](s: String): F[Email] = {
-    if s.contains("@")
-    then Sync[F].pure(s.asInstanceOf[Email])
-    else Sync[F].raiseError(IllegalArgumentException("Invalid email string."))
-  }
-
   extension (e: Email) def value: String = e
 
-  implicit val eqInstance: Eq[Email] = Eq.instance[Email] { (e1, e2) =>
-    e1.value == e2.value
-  }
+  given Eq[Email] = Eq.by[Email, String](_.value)
 
-  implicit val showInstance: Show[Email] = Show.show[Email](_.value)
+  given Show[Email] = Show.show[Email](_.value)
+
+  def apply[F[_]](s: String)(using ApplicativeError[F, Throwable]) =
+    program.run(s)
+
+  def program[F[_]](using ae: ApplicativeError[F, Throwable]) =
+    Kleisli[F, String, Email] {
+      validate(_) match {
+        case Validated.Valid(email) => email.pure
+        case Validated.Invalid(es)  =>
+          IllegalArgumentException(es.mkString(", ")).raiseError
+      }
+    }
+
+  def validate(s: String): Validated[List[String], Email] =
+    runValidators(Checks.all)(s).map(_ => Email.of(s))
+
+  private def of(c: String): Email = c
+
+  private object Checks {
+    val all: List[Validator[String]] = List(hasAt, hasDot, isNotEmpty)
+
+    def hasDot: Validator[String] =
+      validatorFromPredicate[String](_.contains("."))("missing dot")
+    def hasAt: Validator[String] =
+      validatorFromPredicate[String](_.contains("@"))("missing @")
+    def isNotEmpty: Validator[String] =
+      validatorFromPredicate[String](_.nonEmpty)("is empty")
+
+  }
 }

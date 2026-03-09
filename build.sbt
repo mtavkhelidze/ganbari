@@ -25,9 +25,17 @@ lazy val commonDeps = Seq(
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.7.0" % Test,
 )
 
-lazy val core = (project in file("modules/foundation"))
+lazy val foundation = (project in file("modules/foundation"))
+  .dependsOn(services)
   .settings(
     name := "foundation",
     idePackagePrefix := Some("ge.zgharbi.ganbari.foundation"),
+    libraryDependencies ++= commonDeps,
+  )
+
+lazy val services = (project in file("modules/services"))
+  .settings(
+    name := "services",
+    idePackagePrefix := Some("ge.zgharbi.ganbari.services"),
     libraryDependencies ++= commonDeps,
   )

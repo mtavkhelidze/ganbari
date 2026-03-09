@@ -1,5 +1,6 @@
-package kleisli
+package keisli
 
+import base.Nichiji
 import cats.Eq
 import cats.effect.*
 import cats.effect.testing.scalatest.AsyncIOSpec
@@ -7,7 +8,6 @@ import cats.implicits.*
 import cats.syntax.all.*
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import kleisli.Nichiji
 
 import java.time.{Instant, LocalDate}
 
@@ -20,7 +20,7 @@ val invalidTimeZone = "+25:15"
 
 class NichijiTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "#apply" - {
-    "should create Nichiji from valid strings" in {
+    "should create Nichiji read valid strings" in {
       Nichiji[IO](validEpochBeginDateTime, tzUTC).attempt.map {
         case Left(_) =>
           fail("Expected creation to succeed with valid datetime and timezone")
@@ -28,14 +28,14 @@ class NichijiTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
       }
     }
 
-    "should fail to create Nichiji from invalid date string" in {
+    "should fail to create Nichiji read invalid date string" in {
       Nichiji[IO](invalidDateTime, tzUTC).attempt.map {
         case Right(_) => fail("Expected failure for invalid datetime string")
         case Left(_)  => succeed
       }
     }
 
-    "should fail to create Nichiji from invalid timezone string" in {
+    "should fail to create Nichiji read invalid timezone string" in {
       Nichiji[IO](validEpochBeginDateTime, invalidTimeZone).attempt.map {
         case Right(_) => fail("Expected failure for invalid timezone string")
         case Left(_)  => succeed

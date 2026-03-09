@@ -1,9 +1,9 @@
-package kleisli
+package base
 
 import cats.*
 import cats.effect.*
 import cats.syntax.all.*
-import kleisli.Nichiji
+import base.Nichiji
 
 import java.time.*
 

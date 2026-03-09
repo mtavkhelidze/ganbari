@@ -1,4 +1,4 @@
-package kleisli
+package base
 
 import cats.*
 

@@ -1,9 +1,9 @@
-package kleisli
+package base
 
 import cats.*
 import cats.effect.Sync
 import cats.syntax.all.*
-import kleisli.{IdType, Nikka}
+import base.{IdType, Nikka}
 
 private object NikkaId {
   type Type = IdType[Tag]
