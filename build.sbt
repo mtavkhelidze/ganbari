@@ -17,10 +17,10 @@ Global / excludeLintKeys += idePackagePrefix
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Compile / run / fork := true
 
-// Common dependencies for all modules
+lazy val basePackage = "ge.zgharbi.ganbari"
 lazy val commonDeps = Seq(
-  "org.scalatest" %% "scalatest" % """3.2.19""" % Test,
-  "org.typelevel" %% "cats-core" % """2.13.0""",
+  "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+  "org.typelevel" %% "cats-core" % "2.13.0",
   "org.typelevel" %% "cats-effect" % "3.7.0",
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
 )
@@ -29,13 +29,13 @@ lazy val foundation = (project in file("modules/foundation"))
   .dependsOn(services)
   .settings(
     name := "foundation",
-    idePackagePrefix := Some("ge.zgharbi.ganbari.foundation"),
+    idePackagePrefix := Some(s"foundation"),
     libraryDependencies ++= commonDeps,
   )
 
 lazy val services = (project in file("modules/services"))
   .settings(
     name := "services",
-    idePackagePrefix := Some("ge.zgharbi.ganbari.services"),
+    idePackagePrefix := Some(s"services"),
     libraryDependencies ++= commonDeps,
   )

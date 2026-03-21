@@ -1,23 +1,23 @@
+package services
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.{IO, Ref}
-import ge.zgharbi.ganbari.services.IdGen
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 import java.util.UUID
 
-class IdGenTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
-  "IdGen.uuid[IO]" - {
+  "IdService.uuid[IO]" - {
 
-    val liveGen = IdGen.uuid[IO]
+    val liveGen = IdService.uuid[IO]
 
     val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
     val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
 
-    def testGen(ids: UUID*): IO[IdGen[IO, UUID]] = {
+    def testGen(ids: UUID*): IO[IdService[IO, UUID]] = {
       Ref.of[IO, List[UUID]](ids.toList).map { ref =>
-        new IdGen[IO, UUID] {
+        new IdService[IO, UUID] {
           override def read(s: String): IO[UUID] =
             IO(UUID.fromString(s))
 

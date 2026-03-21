@@ -7,7 +7,6 @@ import base.Nichiji
 
 import java.time.*
 
-// @note: Nichiji (日時) is Date and Time in Japanese
 final case class Nichiji(
     ts: LocalDateTime,
     tz: ZoneOffset,

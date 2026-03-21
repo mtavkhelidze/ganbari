@@ -1,9 +1,9 @@
 package keisli
 
-import base.IdType
 import cats.effect.*
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.syntax.all.*
+import ge.zgharbi.ganbari.foundation.kleisli.IdType
 import kleisli.IdOps
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers

@@ -3,7 +3,8 @@ package base
 import cats.*
 import cats.effect.Sync
 import cats.syntax.all.*
-import base.{IdType, Nikka}
+import base.Nikka
+import kleisli.IdType
 
 private object NikkaId {
   type Type = IdType[Tag]

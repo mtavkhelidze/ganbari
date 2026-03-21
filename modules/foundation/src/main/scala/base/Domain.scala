@@ -1,5 +1,7 @@
 package base
 
+import kleisli.IdType
+
 private object DomainId { sealed trait Tag }
 opaque type DomainId = IdType[DomainId.Tag]
 
