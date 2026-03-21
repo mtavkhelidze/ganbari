@@ -19,10 +19,10 @@ Compile / run / fork := true
 
 // Common dependencies for all modules
 lazy val commonDeps = Seq(
-  "org.scalatest" %% "scalatest" % "3.2.19" % Test,
-  "org.typelevel" %% "cats-core" % "2.13.0",
-  "org.typelevel" %% "cats-effect" % "3.6.3",
-  "org.typelevel" %% "cats-effect-testing-scalatest" % "1.7.0" % Test,
+  "org.scalatest" %% "scalatest" % """3.2.19""" % Test,
+  "org.typelevel" %% "cats-core" % """2.13.0""",
+  "org.typelevel" %% "cats-effect" % "3.7.0",
+  "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
 )
 
 lazy val foundation = (project in file("modules/foundation"))

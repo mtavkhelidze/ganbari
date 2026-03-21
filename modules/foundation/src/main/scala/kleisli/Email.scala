@@ -14,10 +14,7 @@ object Email {
 
   given Show[Email] = Show.show[Email](_.value)
 
-  def apply[F[_]](s: String)(using ApplicativeError[F, Throwable]) =
-    program.run(s)
-
-  def program[F[_]](using ae: ApplicativeError[F, Throwable]) =
+  def apply[F[_]](using ae: ApplicativeError[F, Throwable]) =
     Kleisli[F, String, Email] {
       validate(_) match {
         case Validated.Valid(email) => email.pure
@@ -27,19 +24,28 @@ object Email {
     }
 
   def validate(s: String): Validated[List[String], Email] =
-    runValidators(Checks.all)(s).map(_ => Email.of(s))
+    runValidators(Checks.all)(s).map(_ => Email.from(s))
 
-  private def of(c: String): Email = c
+  private[kleisli] def from(c: String): Email = c
 
-  private object Checks {
+  private[kleisli] enum ErrorMsg(m: String) {
+    override def toString: String = m
+
+    case NoAt extends ErrorMsg("missing @")
+    case NoDot extends ErrorMsg("missing dot")
+    case Empty extends ErrorMsg("is empty")
+  }
+
+  private[kleisli] object Checks {
     val all: List[Validator[String]] = List(hasAt, hasDot, isNotEmpty)
 
     def hasDot: Validator[String] =
-      validatorFromPredicate[String](_.contains("."))("missing dot")
-    def hasAt: Validator[String] =
-      validatorFromPredicate[String](_.contains("@"))("missing @")
-    def isNotEmpty: Validator[String] =
-      validatorFromPredicate[String](_.nonEmpty)("is empty")
+      validatorFromPredicate[String](_.contains("."))(ErrorMsg.NoDot.toString)
 
+    def hasAt: Validator[String] =
+      validatorFromPredicate[String](_.contains("@"))(ErrorMsg.NoAt.toString)
+
+    def isNotEmpty: Validator[String] =
+      validatorFromPredicate[String](_.nonEmpty)(ErrorMsg.Empty.toString)
   }
 }
