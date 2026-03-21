@@ -1,6 +1,5 @@
-頑張り：やることの仕組み</br><small>ganbari: yarukotono shikumi</small>
+頑張り：やることの仕組み</br><h4>ganbari: yarukotono shikumi</h4>
 ---
-<hr/>
 <i>Daily effort management system</i></b>
 
 ### Design Philosophy
