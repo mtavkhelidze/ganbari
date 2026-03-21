@@ -6,7 +6,9 @@
 
 Everything is Kleisli. The rest is commentary.
 
-### Term [Dictionary][dictionary]
+### Term Dictionary 
+
+> <sub>The real [Dictionary][dictionary]</sub>
 
 | Kanji | Hiragana | Romaji    | Meaning                                 |
 |:------|:---------|:----------|:----------------------------------------|
