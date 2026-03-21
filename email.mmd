@@ -1,18 +1,18 @@
 graph TD
-    A["String"]
+    Mine["String"]
     B["NonEmptyString"]
     C["TrimmedString"]
     D["EmailCandidate"]
     E["ValidEmail"]
     F["NormalizedEmail"]
 
-    A -->|"Either Error\nnonEmpty"| B
+    Mine -->|"Either Error\nnonEmpty"| B
     B -->|"Either Error\ntrim"| C
     C -->|"Either Error\ncheckFormat"| D
     D -->|"IO Either Error\ncheckMXRecord"| E
     E -->|"Either Error\nnormalize"| F
 
-    style A fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
+    style Mine fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
     style B fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
     style C fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4
     style D fill:#1e1e2e,stroke:#89b4fa,color:#cdd6f4

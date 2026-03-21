@@ -1,4 +1,5 @@
 package services
+import cats.data.Kleisli
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.{IO, Ref}
 import org.scalatest.freespec.AsyncFreeSpec
@@ -8,32 +9,32 @@ import java.util.UUID
 
 class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
-  "IdService.uuid[IO]" - {
+  val service = IdService.uuid[IO]
 
-    val liveGen = IdService.uuid[IO]
+  val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
+  val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
 
-    val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
-    val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
+  def testGen(ids: UUID*): IO[IdService[IO, UUID]] =
+    Ref.of[IO, List[UUID]](ids.toList).map { ref =>
+      new IdService[IO, UUID] {
+        override def read: Kleisli[IO, String, UUID] =
+          Kleisli(s => IO(UUID.fromString(s)))
 
-    def testGen(ids: UUID*): IO[IdService[IO, UUID]] = {
-      Ref.of[IO, List[UUID]](ids.toList).map { ref =>
-        new IdService[IO, UUID] {
-          override def read(s: String): IO[UUID] =
-            IO(UUID.fromString(s))
-
-          override def write: IO[UUID] =
-            ref.modify {
-              case head :: tail => (tail, head)
-              case Nil          => throw new NoSuchElementException("exhausted")
-            }
-        }
+        override def write: Kleisli[IO, Unit, UUID] =
+          Kleisli.liftF(ref.modify {
+            case head :: tail => (tail, head)
+            case Nil          => throw new NoSuchElementException("exhausted")
+          })
       }
     }
+
+  "IdService.uuid[IO]" - {
+
     "should generate distinct UUIDs deterministically" in {
       for {
         gen <- testGen(id1, id2)
-        a <- gen.write
-        b <- gen.write
+        a <- gen.write.run(())
+        b <- gen.write.run(())
       } yield {
         a shouldEqual id1
         b shouldEqual id2
@@ -42,27 +43,20 @@ class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     }
 
     "should generate valid UUIDs" in {
-      for {
-        id1 <- liveGen.write
-      } yield {
-        id1 shouldBe a[UUID]
-      }
+      service.write.run(()) map (_.isInstanceOf[UUID] shouldBe true)
     }
 
     "should parse valid UUID string" in {
       val sample = UUID.randomUUID()
-      for {
-        parsed <- liveGen.read(sample.toString)
-      } yield {
-        parsed shouldEqual sample
-      }
+      service.read.map(_ shouldEqual sample).run(sample.toString)
     }
 
     "should fail on invalid UUID string" in {
-      liveGen.read("not-a-uuid").attempt.map {
-        case Left(_: IllegalArgumentException) => succeed
-        case _ => fail("Expected IllegalArgumentException")
-      }
+      service.read
+        .assertThrowsError(
+          _.isInstanceOf[IllegalArgumentException] shouldBe true,
+        )
+        .run("wrong uuid")
     }
   }
 }
