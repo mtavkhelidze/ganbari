@@ -2,12 +2,18 @@ package services
 import cats.data.Kleisli
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.effect.{IO, Ref}
+import org.scalatest.Assertion
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 import java.util.UUID
+import scala.reflect.ClassTag
 
 class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+
+  // @todo: move ofType into separate test-utils module
+  def ofType[E: ClassTag](e: E): Assertion =
+    e.isInstanceOf[E] shouldBe true
 
   val service = IdService.uuid[IO]
 
@@ -29,7 +35,7 @@ class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
     }
 
   "IdService.uuid[IO]" - {
-
+    // @misha: just to make sure no funny business happens along the way
     "should generate distinct UUIDs deterministically" in {
       for {
         gen <- testGen(id1, id2)
@@ -53,9 +59,7 @@ class IdServiceTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 
     "should fail on invalid UUID string" in {
       service.read
-        .assertThrowsError(
-          _.isInstanceOf[IllegalArgumentException] shouldBe true,
-        )
+        .assertThrowsError(ofType[IllegalArgumentException])
         .run("wrong uuid")
     }
   }
