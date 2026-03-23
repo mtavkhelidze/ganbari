@@ -26,16 +26,23 @@ lazy val commonDeps = Seq(
 )
 
 lazy val foundation = (project in file("modules/foundation"))
-  .dependsOn(services)
+  .dependsOn(fuda)
   .settings(
     name := "foundation",
     idePackagePrefix := Some(s"foundation"),
     libraryDependencies ++= commonDeps,
   )
 
-lazy val services = (project in file("modules/services"))
+lazy val fuda = (project in file("modules/fuda"))
   .settings(
-    name := "services",
-    idePackagePrefix := Some(s"services"),
+    name := "fuda",
+    idePackagePrefix := Some(s"fuda"),
     libraryDependencies ++= commonDeps,
   )
+//
+//lazy val services = (project in file("modules/services"))
+//  .settings(
+//    name := "services",
+//    idePackagePrefix := Some(s"services"),
+//    libraryDependencies ++= commonDeps,
+//  )

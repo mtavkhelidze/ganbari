@@ -10,7 +10,7 @@ opaque type Email <: String = String
 object Email {
   extension (e: Email) def value: String = e
 
-  given Eq[Email] = Eq.by[Email, String](_.value)
+  given Eq[Email] = (a, b) => a.value.equalsIgnoreCase(b)
 
   given Show[Email] = Show.show[Email](_.value)
 

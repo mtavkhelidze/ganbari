@@ -4,9 +4,10 @@
 
 ### Design Philosophy
 
-Everything is Kleisli. The rest is commentary.
+- Everything is Kleisli. The rest is commentary.
+- Dependency injections are given.
 
-### Term Dictionary 
+### Term Dictionary
 
 > <sub>The real [Dictionary][dictionary]</sub>
 
@@ -17,5 +18,6 @@ Everything is Kleisli. The rest is commentary.
 | 日時    | にちじ      | nichiji   | date and time                           |
 | やる事   | やること     | yaru koto | a thing to do                           |
 | 記録    | きろく      | kiroku    | permanent record, log entry             |
+| 札     | ふだ       | fuda      | tag, label, token                       |
 
 [dictionary]: https://www.japandict.com/

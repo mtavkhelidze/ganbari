@@ -1,11 +1,24 @@
-package base
+package kleisli
 
-import kleisli.IdType
+import cats.*
+import cats.data.*
+import cats.syntax.all.*
+import cats.effect.*
+import fuda.*
+import fuda.given
 
-private object DomainId { sealed trait Tag }
-opaque type DomainId = IdType[DomainId.Tag]
+opaque type DomainId = UuidFuda
+
+val id = FudaFactory[IO].make[DomainId]
 
 case class Domain(
     id: DomainId,
     name: String,
 )
+
+object Domain {
+  def apply[F[_]: Sync](n: String): Kleisli[F, String, Domain] =
+    ???
+
+  private def apply(id: DomainId, name: String): Domain = new Domain(id, name)
+}

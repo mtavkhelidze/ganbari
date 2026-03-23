@@ -1,16 +1,9 @@
 package base
 
-import cats.*
+import fuda.*
 import cats.effect.Sync
-import cats.syntax.all.*
-import base.Nikka
-import kleisli.IdType
 
-private object NikkaId {
-  type Type = IdType[Tag]
-  sealed trait Tag
-}
-type NikkaId = NikkaId.Type
+opaque type NikkaId = UuidFuda
 
 sealed case class Nikka(
     id: NikkaId,

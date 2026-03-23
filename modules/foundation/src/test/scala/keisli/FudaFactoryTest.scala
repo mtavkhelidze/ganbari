@@ -2,22 +2,20 @@ package keisli
 
 import cats.effect.*
 import cats.effect.testing.scalatest.AsyncIOSpec
-import kleisli.{IdFactory, IdType}
 import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
-import services.IdService
 
 import java.util.UUID
 
-private object UserId { sealed trait Tag }
-type UserId = IdType[UserId.Tag]
+//private object UserId { sealed trait Tag }
+//type UserId = IdType[UserId.Tag]
+//
+//private object TaskId { sealed trait Tag }
+//type TaskId = IdType[TaskId.Tag]
 
-private object TaskId { sealed trait Tag }
-type TaskId = IdType[TaskId.Tag]
-
-class IdTypeTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
-  "IdFactory@uuid" - {
-    val factory: IdFactory[IO, UUID] = IdType.uuid(IdService.uuid)
+class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+  "FudaMaker@uuid" - {
+//    val factory: IdFactory[IO, UUID] = IdType.uuid(IdService.uuid)
 //    "creates random Id and Id read string" in {
 //      factory.make.run()
 //    }
