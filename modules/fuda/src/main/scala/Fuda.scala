@@ -10,6 +10,16 @@ opaque type UuidFuda = Fuda[UUID]
 opaque type LongFuda = Fuda[Long]
 export FudaFactory.*
 
+extension (u: UuidFuda) def value: UUID = u
+
+extension (l: LongFuda) def value: Long = l
+
+given [A: Eq]: Eq[(Fuda[A], A)] with
+  def eqv(fa: (Fuda[A], A), fb: (Fuda[A], A)): Boolean =
+    val (l, _) = fa
+    val (_, r) = fb
+    l == r
+
 given [F[_]: Sync](using s: FudaService[F, UUID]): FudaContext[
   F,
   UuidFuda,

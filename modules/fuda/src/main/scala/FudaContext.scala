@@ -11,8 +11,8 @@ trait FudaContext[F[_], A] {
 }
 
 object FudaContext {
-  given derived[F[_]: Sync, A, B](using
-      ev: A =:= B,
-      fc: FudaContext[F, B],
-  ): FudaContext[F, A] = fc.asInstanceOf
+  given derived[F[_]: Sync, UserType, FudaType](using
+      ev: UserType =:= FudaType,
+      fc: FudaContext[F, FudaType],
+  ): FudaContext[F, UserType] = fc.asInstanceOf
 }

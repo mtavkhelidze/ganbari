@@ -19,5 +19,6 @@
 | やる事   | やること     | yaru koto | a thing to do                           |
 | 記録    | きろく      | kiroku    | permanent record, log entry             |
 | 札     | ふだ       | fuda      | tag, label, token                       |
+| 改善    | かいぜん     | kaizen    | improvement, betterment                 |
 
 [dictionary]: https://www.japandict.com/

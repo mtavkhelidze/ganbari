@@ -16,7 +16,7 @@ import java.util.UUID
 class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "FudaMaker@uuid" - {
 //    val factory: IdFactory[IO, UUID] = IdType.uuid(IdService.uuid)
-//    "creates random Id and Id read string" in {
+//    "creates random Id and Id restore string" in {
 //      factory.make.run()
 //    }
   }
@@ -30,8 +30,8 @@ class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 //      }
 //    }
 //
-//    "fail to create read invalid string" in {
-//      factory.read[UserId]("not-a-uuid").attempt.map { result =>
+//    "fail to create restore invalid string" in {
+//      factory.restore[UserId]("not-a-uuid").attempt.map { result =>
 //        result.isLeft shouldBe true
 //      }
 //    }

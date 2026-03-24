@@ -18,31 +18,34 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 Compile / run / fork := true
 
 lazy val basePackage = "ge.zgharbi.ganbari"
+
 lazy val commonDeps = Seq(
-  "org.scalatest" %% "scalatest" % "3.2.19" % Test,
   "org.typelevel" %% "cats-core" % "2.13.0",
   "org.typelevel" %% "cats-effect" % "3.7.0",
-  "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
 )
+
+lazy val testDeps = Seq(
+  "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+  "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
+  "org.scalameta" %% "munit" % "1.2.4" % Test,
+  "org.typelevel" %% "munit-cats-effect" % "2.2.0" % Test,
+  "org.typelevel" %% "scalacheck-effect-munit" % "2.1.0" % Test,
+)
+
+lazy val deps = commonDeps ++ testDeps
 
 lazy val foundation = (project in file("modules/foundation"))
   .dependsOn(fuda)
   .settings(
     name := "foundation",
     idePackagePrefix := Some(s"foundation"),
-    libraryDependencies ++= commonDeps,
+    libraryDependencies ++= deps,
   )
 
 lazy val fuda = (project in file("modules/fuda"))
   .settings(
     name := "fuda",
     idePackagePrefix := Some(s"fuda"),
-    libraryDependencies ++= commonDeps,
+    libraryDependencies ++= deps,
+    Test / testFrameworks := Seq(new TestFramework("munit.Framework")),
   )
-//
-//lazy val services = (project in file("modules/services"))
-//  .settings(
-//    name := "services",
-//    idePackagePrefix := Some(s"services"),
-//    libraryDependencies ++= commonDeps,
-//  )

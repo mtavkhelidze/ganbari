@@ -1,30 +1,50 @@
 package fuda
-
 import cats.data.Kleisli
-import cats.effect.testing.scalatest.AsyncIOSpec
-import cats.effect.{IO, Ref}
-import org.scalatest.Assertion
-import org.scalatest.freespec.AsyncFreeSpec
-import org.scalatest.matchers.should.Matchers
+import cats.data.Kleisli.*
+import cats.effect.*
+import cats.syntax.all.*
+import fuda.{*, given}
+import munit.Location
 
 import java.util.UUID
-import scala.reflect.ClassTag
 
-class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
+val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
 
-  // @todo: move ofType into separate test-utils module
-  def ofType[E: ClassTag](e: E): Assertion =
-    e.isInstanceOf[E] shouldBe true
+trait UuidFudaTest extends SuitonoKaizen {
+  opaque type UserId = UuidFuda
+  val factory = FudaFactory[IO]
 
-  val service = FudaFactory[IO]
+  tesuto("should generate a unique ids") {
+    (factory.make[UserId] product factory.make[UserId])
+      .map { case (i1, i2) => assertNotEquals(i1, i2) }
+  }
 
-  val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
-  val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
-//
+  tesuto("should parse valid UUID string") {
+    val sample = UUID.randomUUID()
+    factory
+      .restore[UserId]
+      .local(_ => sample.toString)
+      .map { case id => assertEquals(id.value, sample) }
+  }
+  tesuto("should generate valid UUIDs") {
+    factory.make[UserId].map(id => assert(id.value.isInstanceOf[UUID]))
+  }
+
+  tesuto("should fail on invalid UUID string") {
+    factory
+      .restore[UserId]
+      .run("not a UUID")
+      .intercept[IllegalArgumentException]
+  }
+}
+
+class FudaFactoryTest extends SuitonoKaizen("UuidFuda") with UuidFudaTest
+
 //  def testGen(ids: UUID*): IO[IdService[IO, UUID]] =
 //    Ref.of[IO, List[UUID]](ids.toList).map { ref =>
 //      new IdService[IO, UUID] {
-//        override def read: Kleisli[IO, String, UUID] =
+//        override def restore: Kleisli[IO, String, UUID] =
 //          Kleisli(s => IO(UUID.fromString(s)))
 //
 //        override def write: Kleisli[IO, Unit, UUID] =
@@ -48,20 +68,15 @@ class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
 //        a should not equal b
 //      }
 //    }
-
-    "should generate valid UUIDs" in {
-      service.make.run(()) map (_.isInstanceOf[UUID] shouldBe true)
-    }
+//
 
 //    "should parse valid UUID string" in {
 //      val sample = UUID.randomUUID()
-//      service.read.map(_ shouldEqual sample).run(sample.toString)
+//      service.restore.map(_ shouldEqual sample).run(sample.toString)
 //    }
 //
 //    "should fail on invalid UUID string" in {
-//      service.read
+//      service.restore
 //        .assertThrowsError(ofType[IllegalArgumentException])
 //        .run("wrong uuid")
 //    }
-  }
-}
