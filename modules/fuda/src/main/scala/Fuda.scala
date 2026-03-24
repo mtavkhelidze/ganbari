@@ -20,7 +20,7 @@ given [A: Eq]: Eq[(Fuda[A], A)] with
     val (_, r) = fb
     l == r
 
-given [F[_]: Sync](using s: FudaService[F, UUID]): FudaContext[
+given [F[_]: MonadThrow](using s: FudaService[F, UUID]): FudaContext[
   F,
   UuidFuda,
 ] with {
@@ -30,7 +30,7 @@ given [F[_]: Sync](using s: FudaService[F, UUID]): FudaContext[
   def from(u: UUID): UuidFuda = u
 }
 
-given [F[_]: Sync](using s: FudaService[F, Long]): FudaContext[
+given [F[_]: MonadThrow](using s: FudaService[F, Long]): FudaContext[
   F,
   LongFuda,
 ] with {

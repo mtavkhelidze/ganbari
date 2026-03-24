@@ -1,6 +1,6 @@
 package fuda
 
-import cats.effect.Sync
+import cats.*
 
 import java.util.UUID
 trait FudaContext[F[_], A] {
@@ -11,7 +11,7 @@ trait FudaContext[F[_], A] {
 }
 
 object FudaContext {
-  given derived[F[_]: Sync, UserType, FudaType](using
+  given derived[F[_]: MonadThrow, UserType, FudaType](using
       ev: UserType =:= FudaType,
       fc: FudaContext[F, FudaType],
   ): FudaContext[F, UserType] = fc.asInstanceOf
