@@ -11,8 +11,10 @@ import java.util.UUID
 val id1 = UUID.fromString("00000000-0000-0000-0000-000000000001")
 val id2 = UUID.fromString("00000000-0000-0000-0000-000000000002")
 
+opaque type UserId = UuidFuda
+object UserId extends Fuda[UserId]
+
 trait UuidFudaTest extends SuitonoKaizen {
-  opaque type UserId = UuidFuda
   val factory = FudaFactory[IO]
 
   tesuto("should generate a unique ids") {
