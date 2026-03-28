@@ -12,10 +12,10 @@ ThisBuild / developers := List(
     url = url("https://github.com/mtavkhelidze"),
   ),
 )
+ThisBuild / Compile / run / fork := true
 
 Global / excludeLintKeys += idePackagePrefix
 Global / onChangedBuildSource := ReloadOnSourceChanges
-Compile / run / fork := true
 
 lazy val basePackage = "ge.zgharbi.ganbari"
 
@@ -25,11 +25,8 @@ lazy val commonDeps = Seq(
 )
 
 lazy val testDeps = Seq(
-  "org.scalatest" %% "scalatest" % "3.2.19" % Test,
+  "org.scalatest" %% "scalatest" % "3.2.20" % Test,
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
-  "org.scalameta" %% "munit" % "1.2.4" % Test,
-  "org.typelevel" %% "munit-cats-effect" % "2.2.0" % Test,
-  "org.typelevel" %% "scalacheck-effect-munit" % "2.1.0" % Test,
 )
 
 lazy val deps = commonDeps ++ testDeps
@@ -47,5 +44,4 @@ lazy val fuda = (project in file("modules/fuda"))
     name := "fuda",
     idePackagePrefix := Some(s"fuda"),
     libraryDependencies ++= deps,
-    Test / testFrameworks := Seq(new TestFramework("munit.Framework")),
   )

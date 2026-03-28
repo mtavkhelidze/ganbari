@@ -16,7 +16,7 @@ import java.util.UUID
 class FudaFactoryTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "FudaMaker@uuid" - {
 //    val factory: IdFactory[IO, UUID] = IdType.uuid(IdService.uuid)
-//    "creates random Id and Id restore string" in {
+//    "creates random IdType and IdType restore string" in {
 //      factory.make.run()
 //    }
   }

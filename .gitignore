@@ -41,3 +41,6 @@ flyway.conf
 
 # Test reports
 test-output/
+
+old.*
+*.old.*

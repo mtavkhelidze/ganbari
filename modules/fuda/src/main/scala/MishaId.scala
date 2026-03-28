@@ -1,5 +1,0 @@
-package fuda
-
-trait MishaId {
-
-}
