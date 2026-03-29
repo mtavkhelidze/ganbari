@@ -1,4 +1,5 @@
-package keisli
+package foundation
+package kleisli
 
 import base.Nichiji
 import cats.Eq
@@ -18,7 +19,7 @@ val tzGST = "+04:00"
 val invalidDateTime = "1970/01/02 17:30"
 val invalidTimeZone = "+25:15"
 
-class NichijiTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+object NichijiTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "#apply" - {
     "should create Nichiji restore valid strings" in {
       Nichiji[IO](validEpochBeginDateTime, tzUTC).attempt.map {
