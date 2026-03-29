@@ -10,9 +10,9 @@ import org.scalatest.freespec.AsyncFreeSpec
 
 import java.util.UUID
 
-opaque type TestId <: Fuda.Type = Fuda.Type
-opaque type TestIdOne <: Fuda.Type = Fuda.Type
-opaque type TestIdTwo <: Fuda.Type = Fuda.Type
+opaque type TestId <: Fuda.Id = Fuda.Id
+opaque type TestIdOne <: Fuda.Id = Fuda.Id
+opaque type TestIdTwo <: Fuda.Id = Fuda.Id
 
 // AI generated. Errors are not mine.
 val uuidRegex =
@@ -89,7 +89,7 @@ class FudaTest
         .run(validUuid)
     }
   }
-  "Fuda.Type" - {
+  "Fuda.Id" - {
     "opaque aliases are unique" in {
       assertDoesNotCompile("""
           |(Fuda[TestIdOne].read[IO],

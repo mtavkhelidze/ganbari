@@ -17,15 +17,15 @@ private[fuda] trait FudaReader[U] {
 }
 
 @implicitNotFound(
-  "User type ${U} is not Fuda.Type. " +
-    "Correct declaration: opaque MyType <: Fuda.Type = Fuda.Type",
+  "User type ${U} is not Fuda.Id. " +
+    "Correct declaration: opaque MyType <: Fuda.Id = Fuda.Id",
 )
 trait Fuda[U] extends FudaMaker[U] with FudaReader[U]
 
 object Fuda {
-  opaque type Type <: UUID = UUID
+  opaque type Id <: UUID = UUID
 
-  inline given instance[U](using U <:< Fuda.Type): Fuda[U] = {
+  inline given instance[U](using U <:< Fuda.Id): Fuda[U] = {
     ${ FudaMacros.instanceMacro[U] }
   }
 

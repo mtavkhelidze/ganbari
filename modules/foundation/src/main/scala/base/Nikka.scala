@@ -3,7 +3,7 @@ package base
 import fuda.*
 import cats.effect.Sync
 
-opaque type NikkaId = UuidFuda
+opaque type NikkaId <: Fuda.Id = Fuda.Id
 
 sealed case class Nikka(
     id: NikkaId,
