@@ -1,8 +1,10 @@
+package foundation
 package kleisli
+
+import kenshou.*
 
 import cats.*
 import cats.data.*
-import cats.effect.*
 import cats.implicits.*
 import fuda.*
 
@@ -14,6 +16,11 @@ case class Domain(
 )
 
 object Domain {
-  def apply[F[_]]: Kleisli[F, String, Domain] = ???
+  def apply[F[_]: MonadThrow]: Kleisli[F, String, Domain] = {
+    Kleisli
+      .pure(apply.curried)
+      .ap(Fuda[DomainId].make[F].lmap(_ => ()))
+      .ap(Kleisli.ask[F, String] >>> StringInput.notEmpty[F])
+  }
   private def apply(id: DomainId, name: String): Domain = new Domain(id, name)
 }

@@ -20,5 +20,6 @@
 | 記録    | きろく      | kiroku    | permanent record, log entry             |
 | 札     | ふだ       | fuda      | tag, label, token                       |
 | 改善    | かいぜん     | kaizen    | improvement, betterment                 |
+| 検証    | けんしょう    | kenshou   | verificatioin, inspection               |
 
 [dictionary]: https://www.japandict.com/
