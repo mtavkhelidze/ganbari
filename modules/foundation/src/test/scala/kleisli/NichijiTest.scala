@@ -27,6 +27,16 @@ class NichijiTest
         .map(nj => assert(nj.date === java.time.LocalDate.of(1970, 1, 1)))
         .run(epochZero)
     }
+    "#date returns local date in user's timezone" in {
+      Nichiji[IO]
+        .map(nj =>
+          assert(
+            nj.date === java.time.LocalDate.of(2026, 2, 16)
+              && nj.dateUtc === java.time.LocalDate.of(2026, 2, 15),
+          ),
+        )
+        .run((ts = "2026-02-16T01:00", tz = "+04:00"))
+    }
     "#dateUtc returns correct local date" in {
       Nichiji[IO]
         .map(nj => assert(nj.dateUtc === java.time.LocalDate.of(1969, 12, 31)))

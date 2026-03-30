@@ -32,13 +32,13 @@ object Nichiji {
         product parseTz[F].lmap[Input](_.tz)
     ) map (Nichiji(_, _))
 
-  extension (nt: Nichiji) {
-    def date: LocalDate = nt.ts.toLocalDate
+  extension (nj: Nichiji) {
+    def date: LocalDate = nj.iso.toLocalDate
     def dateUtc: LocalDate = instant.atOffset(ZoneOffset.UTC).toLocalDate
-    def instant: Instant = nt.iso.toInstant
-    def isAfter(other: Nichiji): Boolean = nt.instant.isAfter(other.instant)
-    def isBefore(other: Nichiji): Boolean = nt.instant.isBefore(other.instant)
-    def iso: OffsetDateTime = nt.ts.atOffset(nt.tz)
+    def instant: Instant = nj.iso.toInstant
+    def isAfter(other: Nichiji): Boolean = nj.instant.isAfter(other.instant)
+    def isBefore(other: Nichiji): Boolean = nj.instant.isBefore(other.instant)
+    def iso: OffsetDateTime = nj.ts.atOffset(nj.tz)
     def unix: Long = instant.getEpochSecond
   }
 }

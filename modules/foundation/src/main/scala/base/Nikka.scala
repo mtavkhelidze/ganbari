@@ -1,13 +1,16 @@
+package foundation
 package base
 
-import fuda.*
+import kleisli.Nichiji
+
 import cats.effect.Sync
+import fuda.*
 
 opaque type NikkaId <: Fuda.Id = Fuda.Id
 
 sealed case class Nikka(
     id: NikkaId,
-    createdAt: NichijiOld,
+    createdAt: Nichiji,
 )
 
 object Nikka {

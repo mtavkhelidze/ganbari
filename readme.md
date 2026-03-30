@@ -2,6 +2,10 @@
 ---
 <i>Daily effort management system</i></b>
 
+> On any given Sunday you're gonna win or you're gonna lose. The point is - can
+> you win or lose like a man? — **Tony D'Amato** (Al Pachino in _Any Given
+Sunday_)
+
 ### Design Philosophy
 
 - Everything is Kleisli. The rest is commentary.
@@ -21,5 +25,6 @@
 | 札     | ふだ       | fuda      | tag, label, token                       |
 | 改善    | かいぜん     | kaizen    | improvement, betterment                 |
 | 検証    | けんしょう    | kenshou   | verificatioin, inspection               |
+| 王     | おう       | ou        | king, emperor                           |
 
 [dictionary]: https://www.japandict.com/
