@@ -10,7 +10,7 @@ import fuda.*
 
 opaque type DomainId <: Fuda.Id = Fuda.Id
 
-case class Domain(
+case class Domain private (
     id: DomainId,
     name: String,
 )
@@ -22,5 +22,4 @@ object Domain {
       .ap(Fuda[DomainId].make[F].lmap(_ => ()))
       .ap(Kleisli.ask[F, String] >>> StringInput.notEmpty[F])
   }
-  private def apply(id: DomainId, name: String): Domain = new Domain(id, name)
 }

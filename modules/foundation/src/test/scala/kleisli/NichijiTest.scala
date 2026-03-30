@@ -1,200 +1,119 @@
 package foundation
 package kleisli
 
-import base.Nichiji
-import cats.Eq
+import cats.*
+import cats.data.*
 import cats.effect.*
 import cats.effect.testing.scalatest.AsyncIOSpec
 import cats.implicits.*
 import cats.syntax.all.*
+import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.freespec.AsyncFreeSpec
-import org.scalatest.matchers.should.Matchers
 
-import java.time.{Instant, LocalDate}
+import java.time.ZoneOffset
 
-val validEpochBeginDateTime = "1970-01-01T00:00:00"
-val validDateTime = "2026-02-16T17:30"
-val tzUTC = "+00:00"
+val validInput: Nichiji.Input = (ts = "2026-02-16T17:30", tz = "+04:00")
+val epochZero: Nichiji.Input = (ts = "1970-01-01T00:00", tz = "+00:00")
 val tzGST = "+04:00"
-val invalidDateTime = "1970/01/02 17:30"
-val invalidTimeZone = "+25:15"
+val offsetGST = ZoneOffset.of(tzGST).getTotalSeconds.toLong
 
-object NichijiTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
-  "#apply" - {
-    "should create Nichiji restore valid strings" in {
-      Nichiji[IO](validEpochBeginDateTime, tzUTC).attempt.map {
-        case Left(_) =>
-          fail("Expected creation to succeed with valid datetime and timezone")
-        case Right(nt) => nt.unix shouldEqual 0
-      }
+class NichijiTest
+    extends AsyncFreeSpec
+    with AsyncIOSpec
+    with TypeCheckedTripleEquals {
+  "Extensions" - {
+    "#date returns correct local date" in {
+      Nichiji[IO]
+        .map(nj => assert(nj.date === java.time.LocalDate.of(1970, 1, 1)))
+        .run(epochZero)
     }
-
-    "should fail to create Nichiji restore invalid date string" in {
-      Nichiji[IO](invalidDateTime, tzUTC).attempt.map {
-        case Right(_) => fail("Expected failure for invalid datetime string")
-        case Left(_)  => succeed
-      }
+    "#dateUtc returns correct local date" in {
+      Nichiji[IO]
+        .map(nj => assert(nj.dateUtc === java.time.LocalDate.of(1969, 12, 31)))
+        .run((epochZero.ts, tzGST))
     }
-
-    "should fail to create Nichiji restore invalid timezone string" in {
-      Nichiji[IO](validEpochBeginDateTime, invalidTimeZone).attempt.map {
-        case Right(_) => fail("Expected failure for invalid timezone string")
-        case Left(_)  => succeed
-      }
+    "#isAfter returns true when first is after second" in {
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input] { case (_, tz) => (epochZero.ts, tz) })
+        .map { case (later, earlier) => assert(later.isAfter(earlier)) }
+        .run(validInput)
     }
-
-    "should create Nichiji with non-UTC offset correctly" in {
-      Nichiji[IO](validEpochBeginDateTime, tzGST).attempt.map {
-        case Left(_) =>
-          fail("Expected creation to succeed with valid non-UTC offset")
-        case Right(nt) =>
-          nt.unix shouldEqual -14400 // 1970-01-01T00:00:00+04:00 → UTC = -4h = -14400s
-      }
+    "#isAfter returns false when first is before second" in {
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input] { case (_, tz) => (epochZero.ts, tz) })
+        .map { case (later, earlier) => assert(!earlier.isAfter(later)) }
+        .run(validInput)
+    }
+    "#isBefore returns true when first is before second" in {
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input] { case (_, tz) => (epochZero.ts, tz) })
+        .map { case (later, earlier) => assert(earlier.isBefore(later)) }
+        .run(validInput)
+    }
+    "#isBefore returns false when first is after second" in {
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input] { case (_, tz) => (epochZero.ts, tz) })
+        .map { case (later, earlier) => assert(!later.isBefore(earlier)) }
+        .run(validInput)
+    }
+    "#isAfter is false for equal instants" in {
+      (Nichiji[IO] product Nichiji[IO])
+        .map { case (a, b) => assert(!a.isAfter(b) && !b.isAfter(a)) }
+        .run(epochZero)
+    }
+    "#isAfter and #isBefore are reverse of each other" in {
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input] { case (_, tz) => (epochZero.ts, tz) })
+        .map { case (later, earlier) =>
+          assert(later.isAfter(earlier) === earlier.isBefore(later))
+          assert(earlier.isAfter(later) === later.isBefore(earlier))
+        }
+        .run(validInput)
+    }
+    "#isAfter is transitive" in {
+      val earliest = epochZero
+      val middle = (ts = "1970-01-01T12:00", tz = "+00:00")
+      (Nichiji[IO] product Nichiji[IO]
+        .lmap[Nichiji.Input](_ => middle) product Nichiji[IO]
+        .lmap[Nichiji.Input](_ => earliest))
+        .map { case ((latest, mid), earliest) =>
+          assert(latest.isAfter(mid))
+          assert(mid.isAfter(earliest))
+          assert(latest.isAfter(earliest))
+        }
+        .run(validInput)
     }
   }
-  "#date" - {
-    "should return correct local date for a given Nichiji" in {
-      Nichiji[IO](validDateTime, tzGST).map { nj =>
-        nj.date shouldEqual java.time.LocalDate.of(2026, 2, 16)
-      }
+  "Construction" - {
+    "happy path with valid input" in {
+      Nichiji[IO]
+        .map(nj => (nj.ts.toString, nj.tz.toString))
+        .map(x => assert(x === validInput))
+        .run(validInput)
     }
-
-    "should return correct local date for UTC offset" in {
-      Nichiji[IO](validEpochBeginDateTime, tzUTC).map { nj =>
-        nj.date shouldEqual java.time.LocalDate.of(1970, 1, 1)
-      }
+    "fails with invalid input" in {
+      Nichiji[IO]
+        .assertThrows[IllegalArgumentException]
+        .run(("not a date", validInput.tz))
+      Nichiji[IO]
+        .assertThrows[IllegalArgumentException]
+        .run((validInput.ts, "not a timezone"))
     }
-
-    "should handle non-UTC offsets correctly" in {
-      Nichiji[IO](validEpochBeginDateTime, tzGST).map { nj =>
-        nj.date shouldEqual java.time.LocalDate.of(1970, 1, 1)
-      }
+    "fails with empty input" in {
+      Nichiji[IO]
+        .assertThrows[IllegalArgumentException]
+        .run(("", ""))
     }
-  }
-  "#instant" - {
-    "should produce correct UTC Instant" in {
-      Nichiji[IO](validEpochBeginDateTime, tzUTC).map { nj =>
-        nj.instant shouldEqual Instant.ofEpochSecond(0)
-      }
-    }
-    "should produce correct UTC Instant for non-UTC offset" in {
-      Nichiji[IO](validEpochBeginDateTime, tzGST).map { nj =>
-        nj.instant shouldEqual Instant.ofEpochSecond(-14400)
-      }
-    }
-    "should handle negative unix timestamps correctly" in {
-      Nichiji[IO]("1969-12-31T23:59:59", tzUTC).map { nj =>
-        nj.unix shouldEqual -1
-      }
-    }
-  }
-  "#iso" - {
-    "should return correct OffsetDateTime with correct offset" in {
-      Nichiji[IO](validDateTime, tzGST).map { nj =>
-        val iso = nj.iso
-        iso.getOffset.getId shouldEqual tzGST
-        iso.toLocalDateTime.toString shouldEqual validDateTime
-      }
-    }
-    "iso instant should match internal instant" in {
-      Nichiji[IO](validDateTime, tzGST).map { nj =>
-        nj.iso.toInstant shouldEqual nj.instant
-      }
-    }
-  }
-  "#utcDate" - {
-    "should correctly shift the date when calculating utcDate across midnight" in {
-      // 1 AM in Tbilisi (+04:00) on the 21st is 9 PM UTC on the 20th
-      Nichiji[IO]("2026-02-21T01:00:00", tzGST).map { nj =>
-        nj.date shouldEqual LocalDate.of(2026, 2, 21) // Local
-        nj.utcDate shouldEqual LocalDate.of(2026, 2, 20) // UTC
-      }
-    }
-    "should return correct UTC date" in {
-      Nichiji[IO](validDateTime, tzGST).map { nj =>
-        nj.utcDate shouldEqual LocalDate.of(2026, 2, 16)
-      }
-    }
-    "should return correct UTC date for epoch" in {
-      Nichiji[IO](validEpochBeginDateTime, tzGST).map { nj =>
-        nj.utcDate shouldEqual LocalDate.of(1969, 12, 31)
-      }
-    }
-    "should shift utcDate forward when offset is negative" in {
-      // 23:00 at -02:00 is 01:00 UTC next day
-      Nichiji[IO]("2026-02-20T23:00:00", "-02:00").map { nj =>
-        nj.utcDate shouldEqual LocalDate.of(2026, 2, 21)
-      }
-    }
-  }
-  "#comparisons" - {
-    "should consider different local times as equal if they represent the same instant" in {
-      for {
-        njTbilisi <- Nichiji[IO]("2026-02-20T20:00:00", tzGST)
-        njUTC <- Nichiji[IO]("2026-02-20T16:00:00", tzUTC)
-      } yield {
-        (njTbilisi =!= njUTC) shouldBe false
-      }
-    }
-    "should correctly compare isAfter and isBefore" in {
-      for {
-        nj1 <- Nichiji[IO](validEpochBeginDateTime, tzUTC)
-        nj2 <- Nichiji[IO]("1970-01-01T00:00:01", tzUTC)
-      } yield {
-        nj2.isAfter(nj1) shouldBe true
-        nj1.isBefore(nj2) shouldBe true
-        nj1.isAfter(nj2) shouldBe false
-        nj2.isBefore(nj1) shouldBe false
-      }
-    }
-    "Order should be consistent with Eq" in {
-      for {
-        nj1 <- Nichiji[IO]("2026-02-20T20:00:00", tzGST)
-        nj2 <- Nichiji[IO]("2026-02-20T16:00:00", tzUTC)
-      } yield {
-        Eq[Nichiji].eqv(nj1, nj2) shouldBe true
-        Ordering[Nichiji].compare(nj1, nj2) shouldBe 0
-      }
-    }
-  }
-  "#typeclasses" - {
-    import cats.Eq
-
-    "should have correct Eq instance" in {
-      for {
-        nj1 <- Nichiji[IO](validEpochBeginDateTime, tzUTC)
-        nj2 <- Nichiji[IO](validEpochBeginDateTime, tzUTC)
-        nj3 <- Nichiji[IO]("1970-01-01T00:00:01", tzUTC)
-      } yield {
-        Eq[Nichiji].eqv(nj1, nj2) shouldBe true
-        Eq[Nichiji].eqv(nj1, nj3) shouldBe false
-
-        // reflexive
-        Eq[Nichiji].eqv(nj1, nj1) shouldBe true
-
-        // symmetric
-        Eq[Nichiji].eqv(nj1, nj2) shouldBe Eq[Nichiji].eqv(nj2, nj1)
-      }
-    }
-
-    "should have correct Show instance" in {
-      Nichiji[IO](validEpochBeginDateTime, tzUTC).map { nj =>
-        nj.show shouldEqual "1970-01-01T00:00Z"
-      }
-      Nichiji[IO](validDateTime, tzGST).map { nj =>
-        nj.show shouldEqual (validDateTime + tzGST)
-      }
-    }
-
-    "should have correct Order instance" in {
-      for {
-        njEpoch <- Nichiji[IO](validEpochBeginDateTime, tzUTC)
-        njGeo <- Nichiji[IO](validDateTime, tzGST)
-      } yield {
-        Ordering[Nichiji].compare(njEpoch, njEpoch) shouldEqual 0
-        Ordering[Nichiji].compare(njEpoch, njGeo) should be < 0
-        Ordering[Nichiji].compare(njGeo, njEpoch) should be > 0
-      }
+    "handles timezone correctly" in {
+      (Nichiji[IO]
+        product
+          Nichiji[IO].lmap[Nichiji.Input] { case (ts, _) => (ts, tzGST) })
+        .map { case (i1, i2) =>
+          assert(
+            i1.unix - i2.unix === offsetGST,
+          )
+        }
+        .run(epochZero)
     }
   }
 }

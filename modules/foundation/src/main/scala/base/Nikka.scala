@@ -7,7 +7,7 @@ opaque type NikkaId <: Fuda.Id = Fuda.Id
 
 sealed case class Nikka(
     id: NikkaId,
-    createdAt: Nichiji,
+    createdAt: NichijiOld,
 )
 
 object Nikka {
