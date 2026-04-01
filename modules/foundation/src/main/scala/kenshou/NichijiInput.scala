@@ -7,6 +7,6 @@ import cats.*
 import cats.data.*
 
 object NichijiInput {
-  def isViableMontlyDay[F[_]: MonadThrow]: Kleisli[F, Nichiji, Nichiji] =
+  def isViableMonthlyDay[F[_]: MonadThrow]: Kleisli[F, Nichiji, Nichiji] =
     check(_.date.getDayOfMonth <= 28, "Day is not a valid monthly day")
 }
