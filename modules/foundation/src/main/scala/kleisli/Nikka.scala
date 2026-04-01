@@ -1,5 +1,5 @@
 package foundation
-package base
+package kleisli
 
 import kleisli.Nichiji
 

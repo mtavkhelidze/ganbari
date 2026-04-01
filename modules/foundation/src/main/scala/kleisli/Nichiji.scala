@@ -35,6 +35,7 @@ object Nichiji {
   extension (nj: Nichiji) {
     def date: LocalDate = nj.iso.toLocalDate
     def dateUtc: LocalDate = instant.atOffset(ZoneOffset.UTC).toLocalDate
+    def dayOfWeek: DayOfWeek = nj.iso.toLocalDate.getDayOfWeek
     def instant: Instant = nj.iso.toInstant
     def isAfter(other: Nichiji): Boolean = nj.instant.isAfter(other.instant)
     def isBefore(other: Nichiji): Boolean = nj.instant.isBefore(other.instant)
