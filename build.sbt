@@ -45,12 +45,3 @@ lazy val fuda = (project in file("modules/fuda"))
     idePackagePrefix := Some(s"fuda"),
     libraryDependencies ++= deps,
   )
-
-lazy val exp = (project in file("modules/exp"))
-  .settings(
-    name := "exp",
-    description := "Experiments",
-    idePackagePrefix := Some(s"exp"),
-//    libraryDependencies ++= deps,
-//    scalacOptions += "-Xprint:all",
-  )
