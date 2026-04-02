@@ -15,16 +15,17 @@ Sunday_)
 
 > <sub>The real [Dictionary][dictionary]</sub>
 
-| Kanji | Hiragana | Romaji    | Meaning                                 |
-|:------|:---------|:----------|:----------------------------------------|
-| 頑張り   | がんばり     | ganbari   | sustained personal effort               |
-| 日課    | にっか      | nikka     | daily routine, daily work, daily lesson |
-| 日時    | にちじ      | nichiji   | date and time                           |
-| やる事   | やること     | yaru koto | a thing to do                           |
-| 記録    | きろく      | kiroku    | permanent record, log entry             |
-| 札     | ふだ       | fuda      | tag, label, token                       |
-| 改善    | かいぜん     | kaizen    | improvement, betterment                 |
-| 検証    | けんしょう    | kenshou   | verificatioin, inspection               |
-| 王     | おう       | ou        | king, emperor                           |
+| Kanji | Hiragana | Romaji    | Meaning                                         |
+|:------|:---------|:----------|:------------------------------------------------|
+| 頑張り   | がんばり     | ganbari   | sustained personal effort                       |
+| 日課    | にっか      | nikka     | daily routine, daily work, daily lesson         |
+| 日時    | にちじ      | nichiji   | date and time                                   |
+| やる事   | やること     | yaru koto | a thing to do                                   |
+| 記録    | きろく      | kiroku    | record, document, log entry                     |
+| 札     | ふだ       | fuda      | tag, label, token                               |
+| 改善    | かいぜん     | kaizen    | improvement, betterment                         |
+| 検証    | けんしょう    | kenshou   | verificatioin, inspection                       |
+| 王     | おう       | ou        | king, emperor                                   |
+| 恒等    | こうとう     | koutou    | identity, identical equality, identity morphism |
 
 [dictionary]: https://www.japandict.com/
