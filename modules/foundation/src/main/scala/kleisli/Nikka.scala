@@ -19,11 +19,12 @@ object Nikka {
   type Input =
     (name: String, schedule: Schedule, domain: Domain)
 
-  def apply[F[_]: MonadThrow]: Kleisli[F, Input, Nikka] =
-    (
-      Fuda[NikkaId].make[F].local(_ => ()),
-      OuString.apply[F].local[Input](_.name),
-      Kleisli.ask[F, Input].map(_.schedule),
-      Kleisli.ask[F, Input].map(_.domain),
-    ).mapN(new Nikka(_, _, _, _))
+  def apply[F[_]: MonadThrow]: Kleisli[F, Input, Nikka] = {
+    Kleisli
+      .pure(apply.curried)
+      .ap(Fuda[NikkaId].make[F].lmap(_ => ()))
+      .ap(OuString.apply[F].lmap[Input](_.name))
+      .ap(Kleisli.ask[F, Input].map(_.schedule))
+      .ap(Kleisli.ask[F, Input].map(_.domain))
+  }
 }
