@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package front.grpc.types;
+
+option java_package = "front.grpc.types";
+option java_multiple_files = true;
+
+message PingRequest {
+  string tz = 1;
+}
+
+message PingResponse {
+  string local = 1;
+  string utc = 2;
+}
+
+service GanbariService {
+  rpc Ping(PingRequest) returns (PingResponse);
+}

@@ -16,6 +16,7 @@ ThisBuild / Compile / run / fork := true
 
 Global / excludeLintKeys += idePackagePrefix
 Global / onChangedBuildSource := ReloadOnSourceChanges
+ThisBuild / scalacOptions ++= Seq("-Wconf:src=src_managed/.*:s")
 
 lazy val basePackage = "ge.zgharbi.ganbari"
 
@@ -31,17 +32,50 @@ lazy val testDeps = Seq(
 
 lazy val deps = commonDeps ++ testDeps
 
-lazy val foundation = (project in file("modules/foundation"))
-  .dependsOn(fuda)
-  .settings(
-    name := "foundation",
-    idePackagePrefix := Some(s"foundation"),
-    libraryDependencies ++= deps,
-  )
+lazy val ganbari = (project in file("."))
+  .aggregate(fuda, foundation, middle, front, back)
 
 lazy val fuda = (project in file("modules/fuda"))
   .settings(
-    name := "fuda",
+    description := "Universal ID provider",
     idePackagePrefix := Some(s"fuda"),
     libraryDependencies ++= deps,
+    name := "fuda",
+  )
+
+lazy val foundation = (project in file("modules/foundation"))
+  .dependsOn(fuda)
+  .settings(
+    description := "Domain lingua franca",
+    idePackagePrefix := Some(s"foundation"),
+    libraryDependencies ++= deps,
+    name := "foundation",
+  )
+
+lazy val front = (project in file("modules/front"))
+  .dependsOn(middle)
+  .enablePlugins(Fs2Grpc)
+  .settings(
+    description := "Front office / gRPC server",
+    idePackagePrefix := Some("front"),
+    libraryDependencies ++= deps ++ Seq(
+      "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion,
+    ),
+    name := "front",
+  )
+lazy val middle = (project in file("modules/middle"))
+  .dependsOn(foundation, back)
+  .settings(
+    description := "Middle office / coordinators",
+    idePackagePrefix := Some(s"middle"),
+    libraryDependencies ++= deps,
+    name := "middle",
+  )
+
+lazy val back = (project in file("modules/back"))
+  .settings(
+    description := "Back office / independent services",
+    idePackagePrefix := Some(s"back"),
+    libraryDependencies ++= deps,
+    name := "back",
   )

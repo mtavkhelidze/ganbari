@@ -32,6 +32,11 @@ object Nichiji {
         product parseTz[F].lmap[Input](_.tz)
     ) map (Nichiji(_, _))
 
+  def now[F[_]: MonadThrow]: F[Nichiji] =
+    MonadThrow[F].unit.map(_ =>
+      Nichiji(LocalDateTime.now(ZoneOffset.UTC), ZoneOffset.UTC),
+    )
+
   extension (nj: Nichiji) {
     def date: LocalDate = nj.iso.toLocalDate
     def dateUtc: LocalDate = instant.atOffset(ZoneOffset.UTC).toLocalDate
@@ -41,5 +46,7 @@ object Nichiji {
     def isBefore(other: Nichiji): Boolean = nj.instant.isBefore(other.instant)
     def iso: OffsetDateTime = nj.ts.atOffset(nj.tz)
     def unix: Long = instant.getEpochSecond
+    def now[F[_]: MonadThrow]: F[Nichiji] =
+      MonadThrow[F].unit.map(_ => nj.copy(ts = LocalDateTime.now(nj.tz)))
   }
 }

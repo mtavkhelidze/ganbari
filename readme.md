@@ -6,10 +6,10 @@
 > you win or lose like a man? — **Tony D'Amato** (Al Pachino in _Any Given
 Sunday_)
 
-### Design Philosophy
+### [Design Philosophy
 
 - Everything is Kleisli. The rest is commentary.
-- Dependency injections are given.
+- Dependency injections are given.]()
 
 ### Term Dictionary
 
@@ -27,5 +27,7 @@ Sunday_)
 | 検証    | けんしょう    | kenshou   | verificatioin, inspection                       |
 | 王     | おう       | ou        | king, emperor                                   |
 | 恒等    | こうとう     | koutou    | identity, identical equality, identity morphism |
+| 処理    | しょり      | shori     | processing, dealing with, treatment             |
+| 処理部   | しょりぶ     | shoribu   | processor, handler                              |
 
 [dictionary]: https://www.japandict.com/
