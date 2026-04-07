@@ -5,8 +5,12 @@ package front.grpc.types;
 option java_package = "front.grpc.types";
 option java_multiple_files = true;
 
+message RequestContext {
+  string tz = 1; // ISO offset e.g. "+04:00"
+}
+
 message PingRequest {
-  string tz = 1;
+  RequestContext ctx = 1;
 }
 
 message PingResponse {

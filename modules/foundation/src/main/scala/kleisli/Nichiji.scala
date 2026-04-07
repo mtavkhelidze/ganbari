@@ -3,11 +3,14 @@ package kleisli
 
 import cats.*
 import cats.data.*
+import cats.implicits.*
 import cats.syntax.all.*
 
 import java.time.*
 
-case class Nichiji private (ts: LocalDateTime, tz: ZoneOffset)
+/** Obeserver's time.
+  */
+case class Nichiji private (tz: ZoneOffset, ts: LocalDateTime)
 
 object Nichiji {
   private[kleisli] def parseTs[F[_]: MonadThrow]
@@ -17,25 +20,37 @@ object Nichiji {
         .catchNonFatal(LocalDateTime.parse(s))
         .adaptError(e => IllegalArgumentException(e)),
     )
-  private[kleisli] def parseTz[F[_]: MonadThrow]
-      : Kleisli[F, String, ZoneOffset] =
+
+  private def parseTz[F[_]: MonadThrow]: Kleisli[F, String, ZoneOffset] =
     Kleisli(s =>
       MonadThrow[F]
         .catchNonFatal(ZoneOffset.of(s))
         .adaptError(e => IllegalArgumentException(e)),
     )
 
-  type Input = (ts: String, tz: String)
-  def apply[F[_]: MonadThrow]: Kleisli[F, (ts: String, tz: String), Nichiji] =
-    (
-      parseTs[F].lmap[Input](_.ts)
-        product parseTz[F].lmap[Input](_.tz)
-    ) map (Nichiji(_, _))
+  // @todo: those Strings need to be opaque typed
+  type Input = (tz: String, ts: String)
+  def apply[F[_]: MonadThrow]: Kleisli[F, Input, Nichiji] = {
+    Kleisli
+      .ask[F, Input]
+      .flatMap(i =>
+        Kleisli
+          .pure(Nichiji.apply.curried)
+          .ap(parseTz[F].lmap(_ => i.tz))
+          .ap(parseTs[F].lmap(_ => i.ts)),
+      )
+  }
 
-  def now[F[_]: MonadThrow]: F[Nichiji] =
-    MonadThrow[F].unit.map(_ =>
-      Nichiji(LocalDateTime.now(ZoneOffset.UTC), ZoneOffset.UTC),
-    )
+  def nowUtc[F[_]: MonadThrow] =
+    Kleisli
+      .ask[F, Unit]
+      .map(_ => Nichiji(ZoneOffset.UTC, LocalDateTime.now(ZoneOffset.UTC)))
+
+  def now[F[_]: MonadThrow]: Kleisli[F, String, Nichiji] =
+    Kleisli
+      .ask[F, String]
+      .andThen(parseTz[F])
+      .map(tz => Nichiji(tz, LocalDateTime.now(tz)))
 
   extension (nj: Nichiji) {
     def date: LocalDate = nj.iso.toLocalDate
@@ -46,7 +61,5 @@ object Nichiji {
     def isBefore(other: Nichiji): Boolean = nj.instant.isBefore(other.instant)
     def iso: OffsetDateTime = nj.ts.atOffset(nj.tz)
     def unix: Long = instant.getEpochSecond
-    def now[F[_]: MonadThrow]: F[Nichiji] =
-      MonadThrow[F].unit.map(_ => nj.copy(ts = LocalDateTime.now(nj.tz)))
   }
 }

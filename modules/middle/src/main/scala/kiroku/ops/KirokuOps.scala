@@ -22,17 +22,18 @@ object KirokuOps {
     case _: Kiroku.Koutou => k.id
 
   extension [F[_]: MonadThrow](k: Kiroku) {
-    def toRow: F[KirokuRow] = Nichiji
-      .now[F]
-      .map(now =>
-        KirokuRow(
-          entityData = Map.empty,
-          entityId = idValue(k),
-          entityType = typeName(k),
-          id = k.id,
-          ts = now.instant,
-          variant = variantName(k),
-        ),
-      )
+    def toRow: F[KirokuRow] = ???
+//      Nichiji
+//      .now[F]
+//      .map(now =>
+//        KirokuRow(
+//          entityData = Map.empty,
+//          entityId = idValue(k),
+//          entityType = typeName(k),
+//          id = k.id,
+//          ts = now.instant,
+//          variant = variantName(k),
+//        ),
+//      )
   }
 }
