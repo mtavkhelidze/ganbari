@@ -61,5 +61,6 @@ object Nichiji {
     def isBefore(other: Nichiji): Boolean = nj.instant.isBefore(other.instant)
     def iso: OffsetDateTime = nj.ts.atOffset(nj.tz)
     def unix: Long = instant.getEpochSecond
+    def now: Nichiji = Nichiji(nj.tz, LocalDateTime.now(nj.tz))
   }
 }

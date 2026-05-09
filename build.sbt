@@ -2,7 +2,7 @@ ThisBuild / scalaVersion := "3.8.2"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 ThisBuild / description :=
-  """Ganbari backend — functional daily discipline system."""
+  """."""
 ThisBuild / organization := "zgharbi.ge"
 ThisBuild / developers := List(
   Developer(
@@ -21,6 +21,7 @@ ThisBuild / scalacOptions ++= Seq("-Wconf:src=src_managed/.*:s")
 lazy val basePackage = "ge.zgharbi.ganbari"
 
 lazy val commonDeps = Seq(
+  "io.github.mtavkhelidze" %% "fuda" % "0.1.0",
   "org.typelevel" %% "cats-core" % "2.13.0",
   "org.typelevel" %% "cats-effect" % "3.7.0",
 )
@@ -30,21 +31,18 @@ lazy val testDeps = Seq(
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.8.0" % Test,
 )
 
+lazy val grpcDeps = Seq(
+  "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
+  "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
+  "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion,
+)
+
 lazy val deps = commonDeps ++ testDeps
 
 lazy val ganbari = (project in file("."))
-  .aggregate(fuda, foundation, middle, front, back)
-
-lazy val fuda = (project in file("modules/fuda"))
-  .settings(
-    description := "Universal ID provider",
-    idePackagePrefix := Some(s"fuda"),
-    libraryDependencies ++= deps,
-    name := "fuda",
-  )
+  .aggregate(foundation, middle, front, back)
 
 lazy val foundation = (project in file("modules/foundation"))
-  .dependsOn(fuda)
   .settings(
     description := "Domain lingua franca",
     idePackagePrefix := Some(s"foundation"),
@@ -58,9 +56,7 @@ lazy val front = (project in file("modules/front"))
   .settings(
     description := "Front office / gRPC server",
     idePackagePrefix := Some("front"),
-    libraryDependencies ++= deps ++ Seq(
-      "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion,
-    ),
+    libraryDependencies ++= deps ++ grpcDeps,
     name := "front",
   )
 lazy val middle = (project in file("modules/middle"))

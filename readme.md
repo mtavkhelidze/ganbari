@@ -6,10 +6,10 @@
 > you win or lose like a man? — **Tony D'Amato** (Al Pachino in _Any Given
 Sunday_)
 
-### [Design Philosophy
+### Design Philosophy
 
-- Everything is Kleisli. The rest is commentary.
-- Dependency injections are given.]()
+> - Everything is Kleisli. The rest is commentary.
+> - Dependency injections are given.
 
 ### Term Dictionary
 

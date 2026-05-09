@@ -1,7 +1,7 @@
 package foundation
 package kenshou
 
-import kleisli.Nichiji
+import kleisli.{ DomainId, Nichiji }
 
 import cats.*
 import cats.data.*
