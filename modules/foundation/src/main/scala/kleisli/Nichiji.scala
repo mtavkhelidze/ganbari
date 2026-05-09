@@ -41,7 +41,7 @@ object Nichiji {
       )
   }
 
-  def nowUtc[F[_]: MonadThrow] =
+  def nowUtc[F[_]: MonadThrow]: ReaderT[F, Unit, Nichiji] =
     Kleisli
       .ask[F, Unit]
       .map(_ => Nichiji(ZoneOffset.UTC, LocalDateTime.now(ZoneOffset.UTC)))

@@ -18,8 +18,7 @@ object KirokuOps {
   private def variantName(k: Kiroku): String = k match
     case _: Kiroku.Koutou => "Koutou"
 
-  private def idValue(k: Kiroku): UUID = k match
-    case _: Kiroku.Koutou => k.id
+  private def idValue(k: Kiroku): UUID = k.id
 
   extension [F[_]: MonadThrow](k: Kiroku) {
     def toRow: F[KirokuRow] = ???
