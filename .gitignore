@@ -44,3 +44,5 @@ test-output/
 
 old.*
 *.old.*
+*.ignore.*
+*.ignore

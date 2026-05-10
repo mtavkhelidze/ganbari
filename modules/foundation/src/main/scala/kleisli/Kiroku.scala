@@ -10,7 +10,10 @@ import fuda.*
 opaque type KirokuId <: Fuda.Id = Fuda.Id
 
 enum Kiroku(val id: KirokuId, val on: Nichiji) {
-  case Koutou private[Kiroku] (override val id: KirokuId, override val on: Nichiji) extends Kiroku(id, on)
+  case Koutou private[Kiroku] (
+      override val id: KirokuId,
+      override val on: Nichiji,
+  ) extends Kiroku(id, on)
 }
 
 object Kiroku {
